@@ -9,6 +9,6 @@ urlpatterns = [
     path("contact",views.contact,name="contact"),
     path("booking",views.booking,name="booking"),
     path("test",views.test,name="test"),
-    path("restaurant/<string:rest>",views.view_restaurant,name='view_restaurant')
+    #path("restaurant/<string:rest>",views.view_restaurant,name='view_restaurant')
 
 ]
