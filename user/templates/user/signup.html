@@ -1,0 +1,41 @@
+<!DOCTYPE html> {% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'user/signup.css' %}" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <div class="signbox">
+        <h1 style="text-align: center;color: white;">WELCOME TO TABLO</h1>
+        <h1 style="text-align: center;color: white;">Signup</h1>
+        <form action={% url 'user:signup' %} method="post">
+            {% csrf_token %}
+            <label for="username" id="lbl">User Name</label> {%if message%}
+            <hr>
+            <p style="color: red">{{message}}</p>
+            <hr> {%endif%}
+            <input type="text" id="username" name="username" placeholder="User Name..">
+
+            <label for="email" id="lbl">Email Id</label>
+            <input type="email" id="email" name="email" placeholder="abcd@gmail.com">
+
+            <label for="password" id="lbl">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password..">
+
+            <label for="" id="lbl">Re-Enter Password</label>
+            <input type="password" id="password1" name="password1" placeholder="Re-Enter Password">
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+
+</body>
+
+</html>
