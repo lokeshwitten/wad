@@ -8,7 +8,6 @@ urlpatterns = [
     path("signup",views.signup,name="signup"),
     path("contact",views.contact,name="contact"),
     path("booking",views.booking,name="booking"),
-    path("editbooking",views.editbooking,name="editbooking"),
     path("test",views.test,name="test"),
     path("restaurant/<string:rest>",views.view_restaurant,name='view_restaurant')
 
