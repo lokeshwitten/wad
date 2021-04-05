@@ -9,7 +9,8 @@ urlpatterns = [
     path("/contact",views.contact,name="contact"),
     path("/test",views.test,name="test"),
     path("restaurant/<str:rest_code>",views.view_restaurant,name='view_restaurant'),
-    path("booking/",views.booking,name='booking'),
-    path("/qrcode",views.qrcode,name='qrcode')
+    path("/booking/",views.booking,name='booking'),
+    path("/qrcode",views.qrcode,name='qrcode'),
+    path("/logout",views.logout_view,name='logout')
 
 ]

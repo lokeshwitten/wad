@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from django.http  import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 # Create your views here.
@@ -127,4 +127,6 @@ def view_restaurant(request,rest_code):
 def qrcode(request):
     data=readqr()
     return HttpResponseRedirect(data)
-    
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('user:login'))

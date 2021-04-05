@@ -14,15 +14,7 @@ def decode(code):
     pass
     
 
-def generate_qr(data):
-    # example data
-    
-    # output file name
-    filename = "./static/user/site2.png"
-    # generate qr code
-    img = qrcode.make(data)
-    # save img to a file
-    img.save(filename)
+
 
 def readqr():
 # initalize the cam
