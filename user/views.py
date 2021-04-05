@@ -5,6 +5,7 @@ from django.http  import HttpResponseRedirect,HttpResponse
 from django.urls import reverse
 # Create your views here.
 from hoteladmin.models import *
+from .decorators import *
 
 def index(request):
     request.session.set_expiry(0)
@@ -58,13 +59,17 @@ def signup(request):
 def view_login(request):
     if(request.method=="POST"):
         errormessage="Incorrect crendetials or the account doesnt exist"
+        passmismatch="Passwords don't match.Please enter again."
         username=request.POST['username']
         password=request.POST['password']
+        id=request.POST['rest_code']
         user=authenticate(request,username=username,password=password)
         if user is not None:    
             login(request,user)
             #Redirect to index view
-            return HttpResponseRedirect(reverse('user:index'))
+            restaurant=Restaurant.objects.get(rest_id=id)
+            code=get_code(restaurant)
+            return HttpResponseRedirect(reverse('user:view_restaurant',args=(code,)))
 
         else:
            return  render(request,"user/login.html",{
@@ -82,10 +87,18 @@ def booking(request):
         })
     return render(request,"user/booking.html")
 def test(request):
-    ord1=Order.objects.get(pk='ORD001')
+    rest1=Restaurant.objects.get(pk=1)
+    choices=rest1.STATUS
     return render(request,"user/test.html",{
-        'ord1':ord1
+        "choices":choices
     })
     
-def view_restaurant(request,rest):
-    pass
+def view_restaurant(request,rest_code):
+    code=decode(rest_code)
+    restaurant=Restaurant.objects.get(rest_id=code)
+    
+    return render(request,"user/test.html",{
+        "restaurant":restaurant,"dishes":restaurant.dishes.all()
+    })
+    
+    

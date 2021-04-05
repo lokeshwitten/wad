@@ -30,6 +30,7 @@ class Dish(models.Model):
     (SOUTH_INDIAN,'South Indian'),(KOREAN,'Korean'),(SIDE,'Side'),(DESSERT,'Dessert'),
     (BURGER,'Burger'),(BEVERAGES,'Beverages'),(SOUP,'Soup'),(SALAD,"Salad")]
     TIME=[('BR','BreakFast'),('LN','Lunch'),('DI','Dinner')]
+    veg=models.BooleanField(default=False)
     name=models.CharField( max_length=50)
     image=models.ImageField(upload_to='.',blank=True)
     avail=models.BooleanField(default=True)
@@ -105,5 +106,6 @@ class Reservations(models.Model):
     def __str__(self):
         return f"{self.conf_code} {self.cust_name}"
 class Global(models.Model):
-    order_no=models.IntegerField(default=0)
-    cnf_no=models.IntegerField(default=0)
+    order_no=models.IntegerField(default=1)
+    cnf_no=models.IntegerField(default=1)
+    rest_no=models.IntegerField(default=1)
