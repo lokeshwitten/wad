@@ -7,11 +7,17 @@
     <title>Document</title>
 </head>
 <body>
- <ul>
- <li>Restaurant Name :{{restaurant.name}}</li>
-    <li>Restaurant Dishes : {%for dish in dishes%} {{dish}} {%empty %} No dishes Yet{%endfor%} </li>
-    <li> address : {{restaurant.address}}</li> 
- </ul>
-
+<form action="{% url 'user:test' %}" method="post">
+    {% csrf_token %}
+    <label for="rests" >Choose a Restaurant:</label>
+    <select id="rest" name="rest">
+        {% for restaurant in restaurants %}
+      <option value="{{restaurant.rest_id}}">{{restaurant.name}} {{restaurant.cuisine}} Restaurant-{{restaurant.rest_id}}</option>
+      {%empty%}
+        <option>No restaurants</option>
+      {%endfor%}
+    </select>
+    <input type="submit" value="submit">
+</form>
 </body>
 </html>

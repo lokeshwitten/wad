@@ -91,17 +91,20 @@ class Restaurant(models.Model):
             models.UniqueConstraint(fields=['rest_id'],name='rest_id_constraint')
         ]
     def __str__(self):
-        return f"{self.name} {self.cuisine} Restaraunt"
+        return f"{self.name} {self.cuisine} Restaraunt-{self.rest_id}"
 
 
 class Reservations(models.Model):
     PENDING='PD'
     CONFIRM='CON'
     STATUS=[(PENDING,'Pending'),(CONFIRM,'Confirm')]
-    conf_code=models.CharField(max_length=10)
+    conf_code=models.CharField(max_length=30)
+    user=models.ForeignKey(User,null=True,on_delete=models.CASCADE,)
     cust_name=models.CharField(max_length =25)
     date=models.DateField(null=True)
-    status=models.CharField(max_length=4)
+    status=models.CharField(max_length=4,choices=STATUS,default=PENDING)
+    tables=models.IntegerField(null=True)
+    time=models.TimeField(null=True)
 
     def __str__(self):
         return f"{self.conf_code} {self.cust_name}"

@@ -67,9 +67,8 @@ def view_login(request):
         if user is not None:    
             login(request,user)
             #Redirect to index view
-            restaurant=Restaurant.objects.get(rest_id=id)
-            code=get_code(restaurant)
-            return HttpResponseRedirect(reverse('user:view_restaurant',args=(code,)))
+            
+            return HttpResponseRedirect(reverse('user:index',))
 
         else:
            return  render(request,"user/login.html",{
@@ -79,19 +78,44 @@ def view_login(request):
 def contact(request):
     return render(request,"user/contact.html")
 
-def booking(request):
+def booking(request,):
     if request.method=="POST":
-        date=request.POST["date"]
-        return render(request,"user/test.html",{
-            "date":date
-        })
-    return render(request,"user/booking.html")
-def test(request):
-    rest1=Restaurant.objects.get(pk=1)
-    choices=rest1.STATUS
-    return render(request,"user/test.html",{
-        "choices":choices
+        tables=request.POST['no'] #Name of the tables
+        name=request.POST['name'] #Name of the customer
+        date=request.POST['date'] #date of reservation
+        time=request.POST['time'] #Time
+        glob=Global.objects.get(pk=1)
+        cnf_code='CNF'+str(glob.cnf_no)
+        glob.cnf_no +=1
+        glob.save()
+        rest_code=request.session['rests']
+        reservation=Reservations.objects.create(conf_code=cnf_code,user=request.user,cust_name=name,date=date,
+        tables=tables,time=time)
+        if reservation is not None:
+            reservation.save()
+            restaurant=Restaurant.objects.get(rest_id=rest_code)
+            restaurant.capacity-=int(tables)
+            restaurant.save()
+            return HttpResponse('Reservation Successfull')
+        else:
+            return HttpResponse('Reservation cant be made ')
+    rest_code=request.session['rests']
+    restaurant=Restaurant.objects.get(rest_id=rest_code)
+    capacity=restaurant.capacity
+    return render(request,"user/booking.html",{
+        "no":capacity
     })
+def test(request):
+    if request.method=="POST":
+        code=request.POST['rest']
+        request.session['rests']=code
+        return HttpResponseRedirect(reverse('user:booking',))
+       
+
+    return render(request,"user/test.html",{
+        "restaurants":Restaurant.objects.all()
+    })
+    
     
 def view_restaurant(request,rest_code):
     code=decode(rest_code)
@@ -100,5 +124,7 @@ def view_restaurant(request,rest_code):
     return render(request,"user/test.html",{
         "restaurant":restaurant,"dishes":restaurant.dishes.all()
     })
-    
+def qrcode(request):
+    data=readqr()
+    return HttpResponseRedirect(data)
     

@@ -8,4 +8,5 @@ admin.site.register(Restaurant)
 admin.site.register(Order)
 admin.site.register(address)
 admin.site.register(Global)
+admin.site.register(Reservations)
 
