@@ -11,8 +11,9 @@ def get_code(Restaurant):
     code= name+'-'+street+'-'+city+'-'+str(pincode)+'-'+id
     return code
 def decode(code):
-    pass
-    
+    index=code.index('-',len(code)-12,len(code)-1)
+    decode=code[index+1:]
+    return decode    
 
 
 

@@ -57,6 +57,7 @@ class Order(models.Model):
     date=models.DateField(blank=True,null=True)
     time=models.TimeField(blank=True,null=True)
     avg_time=models.IntegerField(default=0)
+    table_no=models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.order_no} "
@@ -74,6 +75,7 @@ class Restaurant(models.Model):
     address=models.ForeignKey( address, on_delete=models.CASCADE,related_name="restaraunt")
     dishes=models.ManyToManyField(Dish,blank=True,related_name='restaraunt')
     capacity=models.IntegerField(default=20)
+    seating_capacity=models.IntegerField(default=50)
     takeaway=models.BooleanField(blank=True,default=False)
     payment=models.CharField(max_length=4,choices=avail_payment,default='Cash')
     orders=models.ManyToManyField(Order,blank=True,related_name='+')
@@ -99,12 +101,13 @@ class Reservations(models.Model):
     CONFIRM='CON'
     STATUS=[(PENDING,'Pending'),(CONFIRM,'Confirm')]
     conf_code=models.CharField(max_length=30)
-    user=models.ForeignKey(User,null=True,on_delete=models.CASCADE,)
+    user=models.ForeignKey(User,null=True,on_delete=models.CASCADE,related_name='reservations')
     cust_name=models.CharField(max_length =25)
     date=models.DateField(null=True)
     status=models.CharField(max_length=4,choices=STATUS,default=PENDING)
     tables=models.IntegerField(null=True)
     time=models.TimeField(null=True)
+    restaurant=models.OneToOneField(Restaurant,null=True,blank=True,related_name='reservations',on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.conf_code} {self.cust_name}"

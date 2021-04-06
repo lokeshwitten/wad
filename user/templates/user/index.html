@@ -30,7 +30,7 @@
             <div class="box2">
                 <div class="options" id="opt">
                          {% if username %}
-                            Welcome Back {{username}}
+                         <a class="o1" href="">Welcome Back {{username}}</a>
                         {%endif%}
                         {% if not username%}
                     <a class="o1" href="{% url 'user:login' %}">Login</a>
@@ -39,6 +39,8 @@
                     <a class="o3" href="{% url 'user:test'%}">Reserve a Table</a>
                     <a class="o4" href="{% url 'user:qrcode'%}"><img id="scamg" src="https://img.icons8.com/ios/2x/qr-code--v2.gif" alt=""></a>
                     <a class="o5" href="{% url 'user:logout' %}">Log Out</a>
+                    <a class="o5" href="">My Orders</a>
+                    <a class="o5" href="">Reservations</a>
                 </div>
 
                 <img id="logo" src="{% static 'user/tablologo.png' %}">
