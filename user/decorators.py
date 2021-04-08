@@ -10,10 +10,28 @@ def get_code(Restaurant):
     id=Restaurant.rest_id
     code= name+'-'+street+'-'+city+'-'+str(pincode)+'-'+id
     return code
-def decode(code):
-    index=code.index('-',len(code)-12,len(code)-1)
-    decode=code[index+1:]
-    return decode    
+
+def decode(string):
+    resdict={}
+    con=''
+    for i in range(len(string)):
+        if (string[i]=='+' or string[i]=='-'):
+            if(string[i]=='+'):
+                if int(con) in resdict:
+                    resdict[int(con)]+=1
+                    con=''
+                else:
+                    resdict[int(con)]=1
+                    con=''
+            if(string[i]=='-'):
+                resdict[int(con)]-=1
+                con=''
+        else:
+            if(string[i]=='q'):
+                i+=1
+            else:
+                con+=string[i]
+    return resdict
 
 
 
@@ -43,3 +61,5 @@ def readqr():
     cv2.destroyAllWindows()
     return data
     
+#Decoding the order data
+

@@ -6,6 +6,7 @@ from django.urls import reverse
 # Create your views here.
 from hoteladmin.models import *
 from .decorators import *
+from django.contrib.auth.decorators import login_required
 
 def index(request):
     request.session.set_expiry(0)
@@ -98,13 +99,15 @@ def confirm_res(request):
         name=request.POST['name'] #Name of the customer
         date=request.POST['date'] #date of reservation
         time=request.POST['time'] #Time
+        rest_code=request.session['rests']
+        restaurant=Restaurant.objects.get(rest_id=rest_code)
         glob=Global.objects.get(pk=1)
         cnf_code='CNF'+str(glob.cnf_no)
         glob.cnf_no +=1
         glob.save()
         rest_id=request.session['rests']
         reservation=Reservations.objects.create(conf_code=cnf_code,user=request.user,cust_name=name,date=date,
-        tables=tables,time=time)
+        tables=tables,time=time,restaurant=restaurant)
         if reservation is not None:
             reservation.save()
             restaurant=Restaurant.objects.get(rest_id=rest_id)
@@ -129,3 +132,32 @@ def qrcode(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('user:login'))
+
+@login_required(redirect_field_name='/usertest1',login_url='/user/login')
+def test1(request):
+    if request.method=="POST":
+        orderdata=request.POST['orderdata']
+        if 'cart' not in request.session:
+            request.session['cart']=decode(orderdata) #First time the user orders
+            return HttpResponseRedirect(reverse('user:order_conf'))
+        else: #If the user changes his mind and goes back
+            request.session+=decode(orderdata)
+    restaurant=Restaurant.objects.get(pk=1)
+    dishes=restaurant.dishes.all()
+    return render(request,"user/test1.html",{
+        "dishes":dishes
+    })
+
+def order_conf(request):
+    orderdata=request.session['cart']
+    dishes=[]
+    quantity=[]
+    for key in orderdata.keys():
+        dish=Dish.objects.get(pk=key)
+        dishes.append(dish.name)
+
+    return render(request,"user/orderconf.html")
+
+def cart(request):
+    pass
+ 
