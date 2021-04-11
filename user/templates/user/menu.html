@@ -80,18 +80,19 @@
 
         </div>
         
-       
+        
         <form action="{% url 'user:view_restaurant' restaurant.rest_id  %}" method="post">
             {% csrf_token %}
             <input type="hidden" value='' name='orderdata' id='orderdata'>
             <input type="submit" id="submitbutton" value='Proceed to Checkout' style="position: absolute; right: 7.5%; bottom: 0;">
           </form>
-          <div class='cartclass'>
-                <h1 id='cartmsg'>Cart Empty</h1>
-                <ul id='cart'>
+    </div>
+    <div class='cartclass'>
+        <h1 id='cartmsg'>CART EMPTY</h1>
+        <ul id='cart'>
 
-                </ul>
-          </div>
+        </ul>
+        </div>
 <script>
 function increaseValue(id)
     {
