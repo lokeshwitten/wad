@@ -154,7 +154,7 @@ body{
     margin: 10px;
     margin-left:30px;
 }
-.crt{
+.cartclass,#cartmsg{
     width:25%;
     height:700px;
      margin-left:75%; 
@@ -163,13 +163,16 @@ body{
     position: fixed;
     /* background-color: brown; */
    }
-#crtimg{
-    width:300px;
-    margin: 30px;
-    margin-top: 10px;
-    margin-left:40px;
-    height: 300px;
-}
+#cart{
+    width:25%;
+    height:700px;
+     margin-left:75%; 
+    text-align: left;
+    color:rgb(161, 161, 161);
+    position: fixed;
+
+   }
+
 
    .disrw:after {
     content: "";
@@ -239,5 +242,5 @@ body{
     margin-left:10px;
     background-color:lightgoldenrodyellow;
     text-align: center;
-    color: darkgreen;
+    color: rgb(208, 252, 208);
 }

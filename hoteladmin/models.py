@@ -65,7 +65,7 @@ class Order(models.Model):
 
 
 class Restaurant(models.Model):
-    avail_payment=[('GPAY','Google Pay'),('UPI','UPI PhonePe')]
+    avail_payment=[('GPAY','Google Pay'),('UPI','UPI PhonePe'),('CASH','Cash Only')]
     MULTI='MC'
     Cuisine=[(MULTI,'MultiCuisine Restaurant'),('VEG','Pure Veg')]
     OPEN='OP'

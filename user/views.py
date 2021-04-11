@@ -121,7 +121,12 @@ def confirm_res(request):
     
     return HttpResponseRedirect(reverse('user:test'))   
     
+@login_required(redirect_field_name='/usertest1',login_url='/user/login')
 def view_restaurant(request,rest_id):
+    if request.method=="POST":
+        orderdata=request.POST['orderdata']
+        request.session['cart']=decode(orderdata) #First time the user orders
+        return HttpResponseRedirect(reverse('user:orderconf'))
     restaurant=Restaurant.objects.get(rest_id=rest_id)    
     return render(request,"user/menu.html",{
         "restaurant":restaurant,"dishes":restaurant.dishes.all()
@@ -133,31 +138,29 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('user:login'))
 
-@login_required(redirect_field_name='/usertest1',login_url='/user/login')
-def test1(request):
-    if request.method=="POST":
-        orderdata=request.POST['orderdata']
-        if 'cart' not in request.session:
-            request.session['cart']=decode(orderdata) #First time the user orders
-            return HttpResponseRedirect(reverse('user:order_conf'))
-        else: #If the user changes his mind and goes back
-            request.session+=decode(orderdata)
-    restaurant=Restaurant.objects.get(pk=1)
-    dishes=restaurant.dishes.all()
-    return render(request,"user/test1.html",{
-        "dishes":dishes
-    })
+
+
 
 def order_conf(request):
     orderdata=request.session['cart']
-    dishes=[]
-    quantity=[]
+    items=[]
     for key in orderdata.keys():
         dish=Dish.objects.get(pk=key)
-        dishes.append(dish.name)
-
-    return render(request,"user/orderconf.html")
+        quantity=orderdata[key]
+        items.append(dish.name+ str(quantity)+ 'X'+   '-' +str(dish.price*quantity) )
+    return render(request,"user/orderconf.html",{
+        "items":items
+    })
 
 def cart(request):
-    pass
+    orderdata=request.session['cart']
+    items=[]
+    for key in orderdata.keys():
+        dish=Dish.objects.get(pk=key)
+        quantity=orderdata[key]
+        items.append(dish.name+ str(quantity)+ 'X'+ '-' +str(dish.price*quantity) )
+    return render(request,"user/cart.html",{
+        "items":items
+    })
+    
  

@@ -13,7 +13,8 @@ urlpatterns = [
     path("/booking/confirmreservation",views.confirm_res,name='confirmres'),
     path("/qrcode",views.qrcode,name='qrcode'),
     path("/logout",views.logout_view,name='logout'),
-    path("test1",views.test1,name='test1'),
-    path('cart',views.cart,name='cart')
+   
+    path('cart',views.cart,name='cart'),
+    path('/orderconf',views.order_conf,name='orderconf')
 
 ]
