@@ -71,6 +71,7 @@ class Restaurant(models.Model):
     OPEN='OP'
     CLOSED='CL'
     STATUS=[(OPEN,'Open'),(CLOSED,'Closed')]
+    
     name=models.CharField( max_length=50)
     address=models.ForeignKey( address, on_delete=models.CASCADE,related_name="restaraunt")
     dishes=models.ManyToManyField(Dish,blank=True,related_name='restaraunt')
