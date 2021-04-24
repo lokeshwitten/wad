@@ -58,6 +58,7 @@ class Order(models.Model):
     time=models.TimeField(blank=True,null=True)
     avg_time=models.IntegerField(default=0)
     table_no=models.IntegerField(default=0)
+    price=models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.order_no} "

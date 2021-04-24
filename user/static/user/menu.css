@@ -154,7 +154,7 @@ body{
     margin: 10px;
     margin-left:30px;
 }
-.cartclass,#cartmsg{
+#cartmsg{
     width:25%;
     height:700px;
      margin-left:75%; 

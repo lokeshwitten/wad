@@ -11,7 +11,12 @@ from datetime import date
 # Create your views here.
 
 def index(request):
-    return render(request,"hoteladmin/index.html")
+    if request.user.is_authenticated:
+        return render(request,"hoteladmin/index.html",{
+            "user":request.user.username.capitalize() } )
+    else:
+        return HttpResponseRedirect(reverse('hoteladmin:login'))
+    
 def view_login(request):
     if(request.method=="POST"):
         errormessage="Incorrect crendetials or the account doesnt exist"
@@ -62,7 +67,7 @@ def register(request):
         password1=request.POST['password1']
         addr=address.objects.create(street=street,city=city,pincode=pincode)
         no=get_number(Global)
-        rest_id="RES"+str(no)
+        rest_id="DEF"+str(no)
         
         if addr is  None:
             return render(request,"hoteladmin/register.html",{
@@ -109,4 +114,17 @@ def register(request):
            
     return render(request,"hoteladmin/register.html")
 
+def view_orders(request):
+    user=request.user
+    restaurant=user.restaurant
+    orders=restaurant.orders.all()
+    
+    return render(request,"hoteladmin/orders.html",{
+        "orders":orders,
+    })
+def expand_order(request,order_no):
+    order=Order.objects.get(order_no=order_no)
+    return render(request,"hoteladmin/expandorder.html",{
+        "order":order
+    })
 
