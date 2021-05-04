@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'user',
     'guardian',
     'hoteladmin',
+    'django.test',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -61,5 +61,24 @@ def readqr():
     cv2.destroyAllWindows()
     return data
     
-#Decoding the order data
+#Checking if the user has an existing order
+def order_exists(user):
+    orders=user.orders.all()
+    latest_order=orders.last()
+    if latest_order is None:
+        return False
+    if(latest_order.bill_status=='PD'):
+        return True
+    else:
+        return False
+    
+def merge_dict(a,b):
+    #Find the common keys
+    common=[]
+    for i in a.keys():
+        for j in b.keys():
+            if(i==j):
+                common.append(i)
+    return common
+
 

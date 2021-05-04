@@ -9,6 +9,9 @@
     <title>Menu</title>
     <link href="{% static 'user/menu.css' %}" type="text/css" rel="stylesheet" />
     <link href="{% static 'user/styles.css' %}" type="text/css" rel="stylesheet">
+    <style>
+        li { display: list-item }
+    </style>
 </head>
 
 <body>
@@ -62,16 +65,16 @@
                     <div class="disclm disdesc">
                         <img id="veg" src="https://img.icons8.com/fluent/2x/vegetarian-food-symbol.png" alt="">
                         <p id="laq{{dish.pk}}">{{dish.name}}</p>
-                        <p id="dishprice{{dish.pk}}">{{dish.price}}</p>
+                        <p id="dishpriceq{{dish.pk}}">{{dish.price}}</p>
                         <div class="coupon">
                             <p>50% off | use xxxxx</p>
                         </div>
                     </div>
                     <form>
 
-                        <div class="value-button" id="decrease{{dish.pk}}" onclick="decreaseValue('q{{dish.pk}}')" value="Decrease Value">-</div>
+                        <div class="value-button" id="decrease{{dish.pk}}" onclick="decrease('q{{dish.pk}}')" value="Decrease Value">-</div>
                         <input type="number" id="q{{dish.pk}}" value="0" name='quantity' hidden>
-                        <div class="value-button" id="increase{{dish.pk}}" onclick="increaseValue('q{{dish.pk}}')" value="Increase Value">+</div>
+                        <div class="value-button" id="increase{{dish.pk}}" onclick="increase('q{{dish.pk}}')" value="Increase Value">+</div>
                         
                       </form>
                 </div>
@@ -81,6 +84,11 @@
 
         </div>
         
+        <h1 id='cartmsg'>CART EMPTY</h1>
+        <ul id='cart'>
+    
+        </ul>
+        
         
         <form action="{% url 'user:view_restaurant' restaurant.rest_id  %}" method="post">
             {% csrf_token %}
@@ -88,72 +96,56 @@
             <input type="submit"  value='Proceed to Checkout' style="position: absolute; right: 7.5%; bottom: 0;">
           </form>
     </div>
-    
+
 <script>
-function increaseValue(id)
+
+function increase(id)
+{
+    quantity=document.getElementById(id).value
+    document.getElementById('orderdata').value+=`${id}+`
+    if(quantity==0)
     {
-      let value=document.getElementById(id).value
-      value++;
-      document.getElementById(id).value=value
-      document.getElementById('orderdata').value+=`${id}+`
-
-      
-      if (value==1)
-      {
+        //Increment the value
+        document.getElementById(id).value++
+        quantity++
+        //Change the cartmsg to 'Cart Items'
         document.getElementById('cartmsg').innerHTML='Cart Items'
-
-        let  li=document.createElement('li')
-        li.id= `l${id}`
-        li.value=`${value}`
-        li.innerHTML= document.getElementById(`la${id}`).innerHTML+'-'+value
+        //Cart Items to be shown To be Shown
+        //Create a list Item
+        var li=document.createElement('li')
+        li.id=`l${id}`
+        li.innerHTML=document.getElementById(`la${id}`).innerHTML+'-'+quantity
         document.getElementById('cart').append(li)
 
-      }
-      else{
-        document.getElementById(`l${id}`).value=value
-        quantity=document.getElementById(`l${id}`).value
-        document.getElementById(`l${id}`).innerHTML=document.getElementById(`la${id}`).innerHTML+'-'+value
-      }
-      
-    
+
+        
     }
-    function decreaseValue(id)
+    else
     {
-     
-      let value=document.getElementById(id).value
-      if(value==0)
-      {
-        value=0
-        document.getElementById(id).value=value
-        document.getElementById('cartmsg').innerHTML='Cart Empty'
-      }
-      else if(value==1){
-        document.getElementById('orderdata').value+=`${id}-`
-        value=value-1;
-        document.getElementById(id).value=value
-        //Check whether the cart element exists and if so delete
-        var li=document.getElementById(`l${id}`)
-        li.remove()
-      }
-      else{
-        document.getElementById('orderdata').value+=`${id}-`
-        value=value-1;
-        document.getElementById(id).value=value
-        document.getElementById(`l${id}`).value=value
-        quantity=document.getElementById(`l${id}`).value
-        document.getElementById(`l${id}`).innerHTML=document.getElementById(`la${id}`).innerHTML+'-'+value
-      }
+        //Just increment without changing cartmsg and items
+        document.getElementById(id).value++
+        quantity= document.getElementById(id).value
+        li=document.getElementById(`l${id}`)
+        li.innerHTML=document.getElementById(`la${id}`).innerHTML+'-'+quantity
+
     }
+}
+
+function decrease(id)
+{
     
+}
+
+
 </script>
-
-    
-        <h1 id='cartmsg'>CART EMPTY</h1>
-    <ul id='cart'>
-
-    </ul>
    
+
     
+
+
+    
+       
+
     </body>
 </html>
             

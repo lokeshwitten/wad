@@ -15,6 +15,8 @@ urlpatterns = [
     path("/logout",views.logout_view,name='logout'),
    
     path('cart',views.cart,name='cart'),
-    path('/orderconf',views.order_conf,name='orderconf')
+    path('/orderconf',views.order_conf,name='orderconf'),
+    path('/ordersuccess',views.place_order,name='ordersuccess'),
+    path('ajax/validate_username',views.validate_username,name='validate_username')
 
 ]

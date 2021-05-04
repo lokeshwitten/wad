@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate,logout
-from django.http  import HttpResponseRedirect,HttpResponse
+from django.http  import HttpResponseRedirect,HttpResponse,JsonResponse
 from django.urls import reverse
 # Create your views here.
 from hoteladmin.models import *
 from .decorators import *
 from django.contrib.auth.decorators import login_required
+from datetime import date,time
+from datetime import datetime
 
 def index(request):
     request.session.set_expiry(0)
@@ -84,7 +86,11 @@ def booking(request,):
         request.session['rests']=request.POST['rest']
         rest_code=request.session['rests']
         restaurant=Restaurant.objects.get(rest_id=rest_code)
-        capacity=restaurant.capacity
+        #Capacity of restaurant after reservations
+        reservations=restaurant.reservations.all()
+        capacity=0
+        for reservation in reservations:
+            pass
         return render(request,"user/booking.html",{
             "no":capacity
         })
@@ -127,7 +133,8 @@ def view_restaurant(request,rest_id):
         orderdata=request.POST['orderdata']
         request.session['cart']=decode(orderdata) #First time the user orders
         return HttpResponseRedirect(reverse('user:orderconf'))
-    restaurant=Restaurant.objects.get(rest_id=rest_id)    
+    restaurant=Restaurant.objects.get(rest_id=rest_id)
+    request.session['rest']=rest_id
     return render(request,"user/menu.html",{
         "restaurant":restaurant,"dishes":restaurant.dishes.all()
     })
@@ -140,7 +147,7 @@ def logout_view(request):
 
 
 
-
+#Order Confirmation page
 def order_conf(request):
     orderdata=request.session['cart']
     items=[]
@@ -162,5 +169,22 @@ def cart(request):
     return render(request,"user/cart.html",{
         "items":items
     })
+def place_order(request):
+    if request.method=="POST":
+        if(order_exists(request.user)):
+            pass
+        else:
+            pass
+        
+
+#Testing Ajax
+def validate_username(request):
+    username=request.GET['username']
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(data)
+
     
+
  

@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 # Create your models here.
 class address(models.Model):
@@ -35,13 +36,20 @@ class Dish(models.Model):
     image=models.ImageField(upload_to='.',blank=True)
     avail=models.BooleanField(default=True)
     served_at=models.CharField(max_length=2,choices=TIME,blank=True)
-
-    price=models.IntegerField()
+    
+    avg_time=models.IntegerField(default=15)
+    price=models.IntegerField(default=0)
     category=models.CharField( max_length=4,choices=CATEGORY,default=DEFAULT)
 
     
     def __str__(self):
         return f"{self.name} - {self.price}"
+
+
+#Order items-Erases after timeout interval
+class Item(models.Model):
+    dish=models.ForeignKey(Dish,on_delete=models.CASCADE,related_name='+')
+    quantity=models.IntegerField(default=0)
 class Order(models.Model):
     PENDING='PD'
     CONFIRM='CON'
@@ -49,11 +57,11 @@ class Order(models.Model):
     ORDER_STATUS=[(PENDING,'Pending'),(CONFIRM,'Confirm')]
     BILL_STATUS=[(PENDING,'Pending'),(PAID,'Paid')]
     order_no=models.CharField(max_length=10,primary_key=True)
-    items=models.ManyToManyField(Dish,related_name='+')
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    items=models.ManyToManyField(Item,related_name='+')
+    user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='orders')
     order_status=models.CharField(max_length=3,choices=ORDER_STATUS,default=PENDING)
     bill_status=models.CharField(max_length=3,choices=BILL_STATUS,default=PENDING)
-    restaurant=models.OneToOneField('Restaurant',related_name='+',on_delete=models.CASCADE,null=True)
+    restaurant=models.ForeignKey('Restaurant',related_name='+',on_delete=models.CASCADE,null=True)
     date=models.DateField(blank=True,null=True)
     time=models.TimeField(blank=True,null=True)
     avg_time=models.IntegerField(default=0)
@@ -61,7 +69,7 @@ class Order(models.Model):
     price=models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.order_no} "
+        return f"{self.order_no}  "
 
 
 
@@ -78,18 +86,20 @@ class Restaurant(models.Model):
     dishes=models.ManyToManyField(Dish,blank=True,related_name='restaraunt')
     capacity=models.IntegerField(default=20)
     seating_capacity=models.IntegerField(default=50)
+    buffer=models.IntegerField(default=0,null=True)
+    
     takeaway=models.BooleanField(blank=True,default=False)
     payment=models.CharField(max_length=4,choices=avail_payment,default='Cash')
     orders=models.ManyToManyField(Order,blank=True,related_name='+')
     combos=models.ManyToManyField(Dish,blank=True,related_name='+')
     open_time=models.TimeField(blank=True,null=True)
-    date=models.DateField(null=True)
+    date=models.DateField(null=True,default=date.today)
     close_time=models.TimeField(blank=True,null=True)
     cuisine=models.CharField(max_length=4,choices=Cuisine,default=MULTI)
     status=models.CharField(max_length=3,choices=STATUS,default=OPEN)
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name='restaurant',null=True)
     rest_id=models.CharField(max_length=10,default='DEF001')
-
+    reserve_list=[]
     class Meta:
         constraints=[
             models.UniqueConstraint(fields=['rest_id'],name='rest_id_constraint')
@@ -109,7 +119,8 @@ class Reservations(models.Model):
     status=models.CharField(max_length=4,choices=STATUS,default=PENDING)
     tables=models.IntegerField(null=True)
     time=models.TimeField(null=True)
-    restaurant=models.OneToOneField(Restaurant,null=True,blank=True,related_name='reservations',on_delete=models.CASCADE)
+    restaurant=models.ForeignKey(Restaurant,null=True,blank=True,related_name='reservations',on_delete=models.CASCADE)
+    TimeOut=models.TimeField(null=True)
 
     def __str__(self):
         return f"{self.conf_code} {self.cust_name}"
@@ -117,3 +128,4 @@ class Global(models.Model):
     order_no=models.IntegerField(default=1)
     cnf_no=models.IntegerField(default=1)
     rest_no=models.IntegerField(default=1)
+
