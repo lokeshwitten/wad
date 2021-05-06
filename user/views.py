@@ -9,6 +9,8 @@ from .decorators import *
 from django.contrib.auth.decorators import login_required
 from datetime import date,time
 from datetime import datetime
+from wad.settings import BASE_DIR
+
 
 def index(request):
     request.session.set_expiry(0)
@@ -86,11 +88,7 @@ def booking(request,):
         request.session['rests']=request.POST['rest']
         rest_code=request.session['rests']
         restaurant=Restaurant.objects.get(rest_id=rest_code)
-        #Capacity of restaurant after reservations
-        reservations=restaurant.reservations.all()
-        capacity=0
-        for reservation in reservations:
-            pass
+        capacity=tables_avail(restaurant)
         return render(request,"user/booking.html",{
             "no":capacity
         })
@@ -101,7 +99,7 @@ def test(request):
     })
 def confirm_res(request):
     if request.method=="POST":
-        tables=request.POST['no'] #Name of the tables
+        tables=request.POST['no'] #No of the tables
         name=request.POST['name'] #Name of the customer
         date=request.POST['date'] #date of reservation
         time=request.POST['time'] #Time
@@ -109,16 +107,15 @@ def confirm_res(request):
         restaurant=Restaurant.objects.get(rest_id=rest_code)
         glob=Global.objects.get(pk=1)
         cnf_code='CNF'+str(glob.cnf_no)
-        glob.cnf_no +=1
-        glob.save()
+       
         rest_id=request.session['rests']
         reservation=Reservations.objects.create(conf_code=cnf_code,user=request.user,cust_name=name,date=date,
         tables=tables,time=time,restaurant=restaurant)
         if reservation is not None:
+            glob.cnf_no +=1
+            glob.save()
+            set_tableno(reservation)
             reservation.save()
-            restaurant=Restaurant.objects.get(rest_id=rest_id)
-            restaurant.capacity-=int(tables)
-            restaurant.save()
             return render(request,"user/resconfirm.html",{
                 "reservation":reservation
             })
@@ -144,20 +141,20 @@ def qrcode(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('user:login'))
-
-
-
 #Order Confirmation page
 def order_conf(request):
     orderdata=request.session['cart']
-    items=[]
+    items={}
+    price=get_price(orderdata)
     for key in orderdata.keys():
         dish=Dish.objects.get(pk=key)
         quantity=orderdata[key]
-        items.append(dish.name+ str(quantity)+ 'X'+   '-' +str(dish.price*quantity) )
+        items[dish]=quantity
     return render(request,"user/orderconf.html",{
-        "items":items
+        "dishes":items,"price":price,"dir":BASE_DIR
     })
+        
+
 
 def cart(request):
     orderdata=request.session['cart']
@@ -175,8 +172,6 @@ def place_order(request):
             pass
         else:
             pass
-        
-
 #Testing Ajax
 def validate_username(request):
     username=request.GET['username']

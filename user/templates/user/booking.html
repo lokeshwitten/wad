@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="../style.css">
+    
 
 
 </head>
@@ -20,6 +20,7 @@
         <div class="container text-center bookTable ">
             <h1 class="upper-case">Book Your Table</h1>
             <h2>Tables Available : {{no}}</h2>
+            <h2 id='msg' style="color: red;"></h2>
 
 
 
@@ -65,7 +66,7 @@
                 <div class="col-lg-10">
                     <div class="input-group">
                         <span class="input-group-addon glyphicon glyphicon-hand-right"></span>
-                        <input type="tel" class="form-control" name="no" id="party" placeholder="Enter No of tables" required>
+                        <input type="tel" class="form-control" name="no" id="tables" placeholder="Enter No of tables" required>
                     </div>
                 </div>
             </div>
@@ -110,13 +111,13 @@
             <div class="col-lg-3 col-md-3"></div>
         </div>
 
-
+        <input id="capacity" type="hidden" value="{{no}}">
 
 
         <div class=" col-lg-12 form-group text-center">
-
-            <input type="submit" value="Submit">
-
+            
+            <input  id="submit" type="submit" value="Submit">
+            
             <!--Modal to display the confirmation code-->
 
             <!--<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">-->
@@ -136,8 +137,24 @@
 
     </form>
 
-
-
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script>
+    var capacity= document.getElementById('capacity').value
+    $("#tables").change(
+        function(){
+            var tables= $(this).val()
+            console.log(tables)
+            if(Number(tables) > Number(capacity)){
+            document.getElementById('msg').innerHTML='Not enough tables are present to complete the reservation'
+            document.getElementById('submit').disabled=true;
+        }
+        else{
+            document.getElementById('msg').innerHTML=''
+            document.getElementById('submit').disabled=false;
+        }
+    }
+)
+</script>
 </body>
 
 </html>

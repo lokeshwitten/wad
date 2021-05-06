@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import mimetypes
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     'user',
     'guardian',
     'hoteladmin',
+    'django_mysql',
     'django.test',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -129,3 +132,5 @@ AUTHENTICATION_BACKENDS = (
     'guardian.backends.ObjectPermissionBackend',
 )
 TIME_ZONE = 'Asia/Kolkata'
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

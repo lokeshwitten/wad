@@ -1,6 +1,9 @@
 from django.urls import path
 from . import views
 app_name='user'
+from django.conf import settings
+
+from django.conf.urls.static import static
 
 urlpatterns = [
     path("/",views.index,name="index"),
@@ -20,3 +23,6 @@ urlpatterns = [
     path('ajax/validate_username',views.validate_username,name='validate_username')
 
 ]
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA_URL,
+                              document_root=settings.MEDIA_ROOT)

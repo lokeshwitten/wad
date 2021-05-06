@@ -4,6 +4,7 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
+from django.core.validators import int_list_validator
 
 # Create your models here.
 class address(models.Model):
@@ -33,7 +34,7 @@ class Dish(models.Model):
     TIME=[('BR','BreakFast'),('LN','Lunch'),('DI','Dinner')]
     veg=models.BooleanField(default=False)
     name=models.CharField( max_length=50)
-    image=models.ImageField(upload_to='.',blank=True)
+    image=models.ImageField(upload_to='images/',blank=True)
     avail=models.BooleanField(default=True)
     served_at=models.CharField(max_length=2,choices=TIME,blank=True)
     
@@ -99,7 +100,7 @@ class Restaurant(models.Model):
     status=models.CharField(max_length=3,choices=STATUS,default=OPEN)
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name='restaurant',null=True)
     rest_id=models.CharField(max_length=10,default='DEF001')
-    reserve_list=[]
+    
     class Meta:
         constraints=[
             models.UniqueConstraint(fields=['rest_id'],name='rest_id_constraint')
@@ -121,6 +122,9 @@ class Reservations(models.Model):
     time=models.TimeField(null=True)
     restaurant=models.ForeignKey(Restaurant,null=True,blank=True,related_name='reservations',on_delete=models.CASCADE)
     TimeOut=models.TimeField(null=True)
+    table_no=models.CharField(validators=[int_list_validator],max_length=200,default='',null=True)
+
+    
 
     def __str__(self):
         return f"{self.conf_code} {self.cust_name}"

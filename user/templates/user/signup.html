@@ -139,8 +139,6 @@ h4{
 	$("#username").change(
 	function (){
 		var username= $(this).val();
-		
-
 		$.ajax({
 			url : '{% url "user:validate_username" %}',
 			data: {
