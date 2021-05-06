@@ -61,6 +61,21 @@ def readqr():
     cap.release()
     cv2.destroyAllWindows()
     return data
+'''Functions for placing Order'''
+
+#Get Order Code
+def get_order_code(Global):
+    return 'ORD'+str(Global.objects.get(pk=1).order_no)
+#Update Global Code
+def update_global_order():
+    glob=Global.objects.get(pk=1)
+    glob.order_no+=1
+    glob.save()
+#Create Order Items
+def create_order_items():
+    pass
+
+
     
 #Checking if the user has an existing order
 def order_exists(user):
@@ -72,7 +87,7 @@ def order_exists(user):
         return True
     else:
         return False
-
+#Common Keys between Dictionaries
 def common(a,b):
     common=[]
     for i in a.keys():
@@ -80,7 +95,7 @@ def common(a,b):
             if(i==j):
                 common.append(i)
     return common
-#Merging Orderdata
+#Merging Two Dictionaries(OrderData(if previous order is present) and Cart Items)
 def merge_dict(a,b):
     #Find the common keys
     ret={}
@@ -108,7 +123,7 @@ def get_price(dict):
         price+=int(dish.price*quantity)
     return price
 
-#Functions for reservations
+'''Functions for reservations'''
 
 #Return the tables available 
 def tables_avail(Restaurant):

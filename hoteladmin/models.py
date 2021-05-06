@@ -50,7 +50,7 @@ class Dish(models.Model):
 #Order items-Erases after timeout interval
 class Item(models.Model):
     dish=models.ForeignKey(Dish,on_delete=models.CASCADE,related_name='+')
-    quantity=models.IntegerField(default=0)
+    quantity=models.IntegerField(default=1)
 class Order(models.Model):
     PENDING='PD'
     CONFIRM='CON'
