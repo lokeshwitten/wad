@@ -123,6 +123,18 @@ def get_price(dict):
         price+=int(dish.price*quantity)
     return price
 
+#Get Price of the order from the items
+def get_order_price(Order):
+    items=Order.items.all()
+    price=0
+    for item in items:
+        price+=item.get_price()
+    return price
+
+def create_order_items(dict):
+    pass
+    
+
 '''Functions for reservations'''
 
 #Return the tables available 

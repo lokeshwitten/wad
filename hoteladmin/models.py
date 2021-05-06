@@ -51,6 +51,9 @@ class Dish(models.Model):
 class Item(models.Model):
     dish=models.ForeignKey(Dish,on_delete=models.CASCADE,related_name='+')
     quantity=models.IntegerField(default=1)
+    
+    def get_price(self):
+        return int(self.dish.price*self.quantity)
 class Order(models.Model):
     PENDING='PD'
     CONFIRM='CON'

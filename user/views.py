@@ -151,7 +151,7 @@ def order_conf(request):
         quantity=orderdata[key]
         items[dish]=quantity
     return render(request,"user/orderconf.html",{
-        "dishes":items,"price":price,"dir":BASE_DIR
+        "dishes":items,"price":price,
     })
         
 
